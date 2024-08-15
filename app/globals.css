@@ -4,3 +4,42 @@
   margin: 0;
 }
 
+
+.raleway {
+  font-family: var(--font-raleway);
+}
+
+.raleway-100 {
+  font-family: var(--font-raleway);
+  font-weight: 100;
+}
+
+.raleway-200 {
+  font-family: var(--font-raleway);
+  font-weight: 200;
+}
+
+.raleway-300 {
+  font-family: var(--font-raleway);
+  font-weight: 300;
+}
+
+.raleway-400 {
+  font-family: var(--font-raleway);
+  font-weight: 400;
+}
+
+.raleway-500 {
+  font-family: var(--font-raleway);
+  font-weight: 500;
+}
+
+.raleway-600 {
+  font-family: var(--font-raleway);
+  font-weight: 600;
+}
+
+.raleway-700 {
+  font-family: var(--font-raleway);
+  font-weight: 700;
+}
