@@ -43,3 +43,8 @@
   font-family: var(--font-raleway);
   font-weight: 700;
 }
+
+.raleway-800 {
+  font-family: var(--font-raleway);
+  font-weight: 800;
+}

@@ -6,7 +6,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 const raleway_init = Raleway({
   subsets: ["latin"],
-  weights: [100, 200, 300, 400, 500, 600, 700],
+  weights: [100, 200, 300, 400, 500, 600, 700, 800, 900],
   variable: "--font-raleway",
 });
 
