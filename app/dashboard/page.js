@@ -3,6 +3,7 @@ import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Sidebar from "../components/sidebar";
 import Cards from "../components/cards";
+import AccountHolder from "../components/account_holder";
 import CardsStats from "../components/cards_stats";
 
 export default function Dashboard() {
@@ -32,24 +33,10 @@ export default function Dashboard() {
         >
           <Stack>
             {/* Account Header */}
-            <Stack
-              direction={"row"}
-              sx={{
-                alignItems: "center",
-                display: "flex",
-                justifyContent: "flex-end",
-              }}
-            >
-              <Typography
-                className="raleway-600"
-                marginRight={"1.5%"}
-                fontSize={"20px"}
-                color={"#003875"}
-                marginY={"2%"}
-              >
-                Account Name
-              </Typography>
-            </Stack>
+
+            <AccountHolder />
+
+            {/* Cards Stats */}
 
             <CardsStats />
 
