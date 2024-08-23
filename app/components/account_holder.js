@@ -1,5 +1,11 @@
+
+"use client";
+import { useSession } from "next-auth/react";
 import { Box, Typography, Stack, Button } from "@mui/material";
+
 export default function AccountHolder({ ...props }) {
+  const session = useSession();
+
   return (
     <Box>
       <Stack
@@ -17,7 +23,7 @@ export default function AccountHolder({ ...props }) {
           color={"#003875"}
           marginY={"2%"}
         >
-          Account Name
+          <div>{session?.data?.user?.name}</div>
         </Typography>
       </Stack>
     </Box>

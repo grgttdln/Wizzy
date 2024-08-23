@@ -1,3 +1,6 @@
+'use client'
+
+import { useState, useEffect, useRef } from "react";
 import { Box, Typography, Stack, Button } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -5,8 +8,37 @@ import Sidebar from "../components/sidebar";
 import Cards from "../components/cards";
 import AccountHolder from "../components/account_holder";
 import CardsStats from "../components/cards_stats";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "@/app/firebase/config";
+import { useRouter } from "next/navigation";
+
 
 export default function Dashboard() {
+  const [user] = useAuthState(auth);
+  const router = useRouter();
+
+  if (!user) {
+    router.push("/login");
+  }
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   return (
     <Box
       sx={{

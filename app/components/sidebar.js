@@ -1,9 +1,25 @@
-import { Box, Typography, Stack, Button, Link } from "@mui/material";
+'use client'
+import { Box, Typography, Stack, Button, Link, ButtonBase } from "@mui/material";
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import ExtensionIcon from "@mui/icons-material/Extension";
 import LogoutIcon from "@mui/icons-material/Logout";
+import { signOut } from "firebase/auth";
+import { auth } from "@/app/firebase/config";
+import { useRouter } from "next/navigation";
+
 
 export default function Sidebar() {
+  const router = useRouter();
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      router.push("/login");
+
+    } catch (err) {
+      console.error("Failed to log out:", err);
+    }
+  };
+
   return (
     <>
       <Box
@@ -116,10 +132,12 @@ export default function Sidebar() {
                 alignItems: "center",
               }}
             >
-              <LogoutIcon sx={{ fontSize: "30px" }} />
-              <Typography className="raleway-600" fontSize={"16px"}>
-                Log out
-              </Typography>
+              <ButtonBase onClick={handleLogout}>
+                <LogoutIcon sx={{ fontSize: "30px" }} />
+                <Typography className="raleway-600" fontSize={"16px"}>
+                  Log out
+                </Typography>
+              </ButtonBase>
             </Stack>
           </Link>
         </Box>

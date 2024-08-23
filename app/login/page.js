@@ -1,10 +1,50 @@
+'use client'
+
+import React, { useState, useEffect } from "react";
 import { Box, Typography, Stack, Button } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import GoogleIcon from "@mui/icons-material/Google";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { auth } from "@/app/firebase/config";
+import { useRouter } from "next/navigation";
+
 
 export default function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [signInWithEmailAndPassword, user, loading, signInError] =
+    useSignInWithEmailAndPassword(auth);
+  const router = useRouter();
+
+
+  
+  useEffect(() => {
+    if (signInError) {
+      setError("Invalid email or password");
+    } else {
+      setError("");
+    }
+  }, [signInError]);
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setError("");
+    try {
+      const res = await signInWithEmailAndPassword(email, password);
+      if (res) {
+        setEmail("");
+        setPassword("");
+        router.push("/dashboard");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+
   return (
     <>
       <Box style={{ position: "relative", width: "100vw", height: "100vh" }}>
@@ -138,6 +178,7 @@ export default function Login() {
                         fontSize: "16px",
                         color: "#003875",
                       }}
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                   </Box>
                   <Box marginTop={"20px"} style={{ width: "100%" }}>
@@ -158,6 +199,7 @@ export default function Login() {
                         borderRadius: "0",
                         color: "#003875",
                       }}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                   </Box>
 
@@ -171,8 +213,10 @@ export default function Login() {
                       borderRadius: "10px",
                       padding: "10px 40px",
                     }}
+                    disabled={loading}
+                    onClick={handleSubmit}
                   >
-                    Login
+                    {loading ? "Signing in..." : "Login"}
                   </Button>
                   <Stack
                     marginTop={"25px"}

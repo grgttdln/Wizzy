@@ -41,3 +41,6 @@ next-env.d.ts
 
 # MacOS specific files
 .DS_Store
+
+
+service-account.json

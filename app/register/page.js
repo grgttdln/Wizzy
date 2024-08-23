@@ -1,10 +1,61 @@
+'use client'
+import React, { useState, useEffect } from "react";
 import { Box, Typography, Stack, Button } from "@mui/material";
 import Image from "next/image";
 import Link from "next/link";
 import GoogleIcon from "@mui/icons-material/Google";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { auth } from "@/app/firebase/config";
+import { useRouter } from "next/navigation";
 
 export default function Register() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState("");
+  const [createUserWithEmailAndPassword, user, loading, signUpError] =
+    useCreateUserWithEmailAndPassword(auth);
+  const router = useRouter();
+
+
+  useEffect(() => {
+    if (signUpError) {
+      // Check Firebase error codes for more specific messages
+      if (signUpError.code === "auth/weak-password") {
+        setError("Password is too weak. Please use a stronger password.");
+      } else if (signUpError.code === "auth/email-already-in-use") {
+        setError("This email is already in use. Please use a different email.");
+      } else {
+        setError("Failed to create an account");
+      }
+    } else {
+      setError("");
+    }
+  }, [signUpError]);
+
+  const handleSignUp = async (event) => {
+      event.preventDefault();
+  
+      if (password !== confirmPassword) {
+        setError("Passwords do not match");
+        return;
+      }
+  
+      try {
+        const res = await createUserWithEmailAndPassword(email, password);
+        if (res) {
+          setEmail("");
+          setPassword("");
+          setConfirmPassword("");
+          router.push("/login");
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+
   return (
     <>
       <Box style={{ position: "relative", width: "100vw", height: "100vh" }}>
@@ -122,7 +173,7 @@ export default function Register() {
                 <Stack marginTop={"35px"}>
                   <Box style={{ width: "100%" }}>
                     <Typography color={"#003875"} className="raleway-400">
-                      EMAIL
+                      ENTER YOUR EMAIL
                     </Typography>
                     <input
                       type="email"
@@ -138,11 +189,12 @@ export default function Register() {
                         fontSize: "16px",
                         color: "#003875",
                       }}
+                      onChange={(e) => setEmail(e.target.value)}
                     />
                   </Box>
                   <Box marginTop={"20px"} style={{ width: "100%" }}>
                     <Typography color={"#003875"} className="raleway-400">
-                      PASSWORD
+                      CREATE A PASSWORD
                     </Typography>
                     <input
                       type="password"
@@ -158,6 +210,29 @@ export default function Register() {
                         borderRadius: "0",
                         color: "#003875",
                       }}
+                      onChange={(e) => setPassword(e.target.value)}
+                    />
+                  </Box>
+
+                  <Box marginTop={"20px"} style={{ width: "100%" }}>
+                    <Typography color={"#003875"} className="raleway-400">
+                      CONFIRM PASSWORD
+                    </Typography>
+                    <input
+                      type="password"
+                      className="raleway-300"
+                      placeholder="Confirm Password"
+                      style={{
+                        width: "100%",
+                        padding: "10px 0px",
+                        border: "none",
+                        fontSize: "16px",
+                        borderBottom: "2px solid #003875",
+                        outline: "none",
+                        borderRadius: "0",
+                        color: "#003875",
+                      }}
+                      onChange={(e) => setConfirmPassword(e.target.value)}
                     />
                   </Box>
 
@@ -171,6 +246,7 @@ export default function Register() {
                       borderRadius: "10px",
                       padding: "10px 40px",
                     }}
+                    onClick={handleSignUp}
                   >
                     Register
                   </Button>
