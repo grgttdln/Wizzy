@@ -1,5 +1,12 @@
-'use client'
-import { Box, Typography, Stack, Button, Link, ButtonBase } from "@mui/material";
+"use client";
+import {
+  Box,
+  Typography,
+  Stack,
+  Button,
+  Link,
+  ButtonBase,
+} from "@mui/material";
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import ExtensionIcon from "@mui/icons-material/Extension";
 import LogoutIcon from "@mui/icons-material/Logout";
@@ -7,14 +14,11 @@ import { signOut } from "firebase/auth";
 import { auth } from "@/app/firebase/config";
 import { useRouter } from "next/navigation";
 
-
 export default function Sidebar() {
   const router = useRouter();
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      router.push("/login");
-
     } catch (err) {
       console.error("Failed to log out:", err);
     }

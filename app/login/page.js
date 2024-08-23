@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Stack, Button } from "@mui/material";
@@ -9,7 +9,7 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { auth } from "@/app/firebase/config";
 import { useRouter } from "next/navigation";
-
+import { signIn } from "next-auth/react";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -19,8 +19,6 @@ export default function Login() {
     useSignInWithEmailAndPassword(auth);
   const router = useRouter();
 
-
-  
   useEffect(() => {
     if (signInError) {
       setError("Invalid email or password");
@@ -43,7 +41,6 @@ export default function Login() {
       console.error(err);
     }
   };
-
 
   return (
     <>
@@ -116,6 +113,7 @@ export default function Login() {
               <Box>
                 <Stack direction={"row"} spacing={2} marginTop={"15px"}>
                   <Button
+                    onClick={() => signIn("google")}
                     className="raleway-400"
                     sx={{
                       backgroundColor: "#DDEEF8",
