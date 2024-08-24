@@ -11,17 +11,31 @@ import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import ExtensionIcon from "@mui/icons-material/Extension";
 import LogoutIcon from "@mui/icons-material/Logout";
 import { signOut } from "firebase/auth";
-import { auth } from "@/app/firebase/config";
+// import { auth } from "@/app/firebase/config";
 import { useRouter } from "next/navigation";
+import { auth } from "../../firebase";
+import { useAuth } from "../../AuthContext";
+import withAuth from "../../utils/withAuth";
 
-export default function Sidebar() {
+const Sidebar = () => {
+  const { user } = useAuth();
+
   const router = useRouter();
   const handleLogout = async () => {
     try {
       await signOut(auth);
+      router.push("/");
     } catch (err) {
       console.error("Failed to log out:", err);
     }
+  };
+
+  const handleDashboard = () => {
+    router.push("/dashboard");
+  };
+
+  const handleCards = () => {
+    router.push("/cards");
   };
 
   return (
@@ -55,8 +69,8 @@ export default function Sidebar() {
             OVERVIEW
           </Typography>
 
-          <Link
-            href="/dashboard"
+          <ButtonBase
+            onClick={handleDashboard}
             sx={{
               backgroundColor: "white",
               color: "#003875",
@@ -80,9 +94,9 @@ export default function Sidebar() {
                 Dashboard
               </Typography>
             </Stack>
-          </Link>
-          <Link
-            href="/cards"
+          </ButtonBase>
+          <ButtonBase
+            onClick={handleCards}
             className="raleway-400"
             sx={{
               textDecoration: "none",
@@ -107,7 +121,7 @@ export default function Sidebar() {
                 Cards
               </Typography>
             </Stack>
-          </Link>
+          </ButtonBase>
         </Stack>
 
         <Box
@@ -117,7 +131,7 @@ export default function Sidebar() {
             marginTop: "auto",
           }}
         >
-          <Link
+          <ButtonBase
             className="raleway-400"
             sx={{
               backgroundColor: "white",
@@ -143,9 +157,11 @@ export default function Sidebar() {
                 </Typography>
               </ButtonBase>
             </Stack>
-          </Link>
+          </ButtonBase>
         </Box>
       </Box>
     </>
   );
-}
+};
+
+export default withAuth(Sidebar);

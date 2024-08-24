@@ -12,8 +12,11 @@ import Sidebar from "../../components/sidebar";
 import AccountHolder from "../../components/sidebar";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import withAuth from "../../../utils/withAuth";
+import { useAuth } from "../../../AuthContext";
 
 const Details = async () => {
+  const { user } = useAuth();
   const params = useParams();
 
   return (
@@ -140,4 +143,4 @@ const Details = async () => {
   );
 };
 
-export default Details;
+export default withAuth(Details);

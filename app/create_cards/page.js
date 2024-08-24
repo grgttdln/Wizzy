@@ -5,8 +5,11 @@ import CardsWide from "../components/cards_wide";
 import Sidebar from "../components/sidebar";
 import AccountHolder from "../components/account_holder";
 import { useRouter } from "next/navigation";
+import withAuth from "../../utils/withAuth";
+import { useAuth } from "../../AuthContext";
 
-export default function Cards() {
+const Cards = () => {
+  const { user } = useAuth();
   return (
     <Box
       sx={{
@@ -90,4 +93,6 @@ export default function Cards() {
       </Stack>
     </Box>
   );
-}
+};
+
+export default withAuth(Cards);

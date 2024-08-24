@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { useState, useEffect, useRef } from "react";
 import { Box, Typography, Stack, Button } from "@mui/material";
@@ -9,129 +9,123 @@ import Cards from "../components/cards";
 import AccountHolder from "../components/account_holder";
 import CardsStats from "../components/cards_stats";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "@/app/firebase/config";
+// import { auth } from "@/app/firebase/config";
+import { auth } from "../../firebase";
 import { useRouter } from "next/navigation";
+import withAuth from "../../utils/withAuth";
+import { useAuth } from "../../AuthContext";
 
+const Dashboard = () => {
+  const { user } = useAuth();
 
-export default function Dashboard() {
-  const [user] = useAuthState(auth);
+  // const [user] = useAuthState(auth);
   const router = useRouter();
 
-  if (!user) {
-    router.push("/login");
-  }
-
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   return (
-    <Box
-      sx={{
-        backgroundColor: "#EEF4FE",
-        minHeight: "100vh",
-        width: "100vw",
-        overflow: "hidden",
-      }}
-    >
-      {/* Outer box */}
-      <Stack direction={"row"}>
-        {/* Sidebar */}
-        <Sidebar />
-
-        {/* Main content */}
+    <>
+      {user ? (
         <Box
           sx={{
-            height: "100vh",
-            width: "77vw",
             backgroundColor: "#EEF4FE",
-            justifyContent: "center",
-            display: "flex",
+            minHeight: "100vh",
+            width: "100vw",
+            overflow: "hidden",
           }}
         >
-          <Stack>
-            {/* Account Header */}
+          {/* Outer box */}
+          <Stack direction={"row"}>
+            {/* Sidebar */}
+            <Sidebar />
 
-            <AccountHolder />
-
-            {/* Cards Stats */}
-
-            <CardsStats />
-
-            {/* Cards */}
-            <Stack
-              marginTop={"3%"}
-              direction={"row"}
-              sx={{ alignItems: "center", display: "flex" }}
+            {/* Main content */}
+            <Box
+              sx={{
+                height: "100vh",
+                width: "77vw",
+                backgroundColor: "#EEF4FE",
+                justifyContent: "center",
+                display: "flex",
+              }}
             >
-              <Typography
-                className="raleway-700"
-                fontSize={"24px"}
-                color={"#003875"}
-              >
-                Continue Learning
-              </Typography>
+              <Stack>
+                {/* Account Header */}
 
-              <Stack direction={"row"} spacing={1} sx={{ marginLeft: "auto" }}>
-                <Button
-                  sx={{
-                    backgroundColor: "white",
-                    borderRadius: "50%",
-                    width: "48px",
-                    height: "48px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    padding: "0",
-                    minWidth: "auto",
-                  }}
+                <AccountHolder />
+
+                {/* Cards Stats */}
+
+                <CardsStats />
+
+                {/* Cards */}
+                <Stack
+                  marginTop={"3%"}
+                  direction={"row"}
+                  sx={{ alignItems: "center", display: "flex" }}
                 >
-                  <ArrowBackIosIcon sx={{ color: "#003875" }} />
-                </Button>
-                <Button
-                  sx={{
-                    backgroundColor: "white",
-                    borderRadius: "50%",
-                    width: "48px",
-                    height: "48px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    padding: "0",
-                    minWidth: "auto",
-                  }}
+                  <Typography
+                    className="raleway-700"
+                    fontSize={"24px"}
+                    color={"#003875"}
+                  >
+                    Continue Learning
+                  </Typography>
+
+                  <Stack
+                    direction={"row"}
+                    spacing={1}
+                    sx={{ marginLeft: "auto" }}
+                  >
+                    <Button
+                      sx={{
+                        backgroundColor: "white",
+                        borderRadius: "50%",
+                        width: "48px",
+                        height: "48px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: "0",
+                        minWidth: "auto",
+                      }}
+                    >
+                      <ArrowBackIosIcon sx={{ color: "#003875" }} />
+                    </Button>
+                    <Button
+                      sx={{
+                        backgroundColor: "white",
+                        borderRadius: "50%",
+                        width: "48px",
+                        height: "48px",
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        padding: "0",
+                        minWidth: "auto",
+                      }}
+                    >
+                      <ArrowForwardIosIcon sx={{ color: "#003875" }} />
+                    </Button>
+                  </Stack>
+                </Stack>
+                {/* Card Display */}
+                <Stack
+                  direction={"row"}
+                  marginTop={"2%"}
+                  spacing={2}
+                  sx={{ alignItems: "center", display: "flex" }}
                 >
-                  <ArrowForwardIosIcon sx={{ color: "#003875" }} />
-                </Button>
+                  <Cards title="Chello" />
+                  <Cards title="hi" />
+                </Stack>
               </Stack>
-            </Stack>
-            {/* Card Display */}
-            <Stack
-              direction={"row"}
-              marginTop={"2%"}
-              spacing={2}
-              sx={{ alignItems: "center", display: "flex" }}
-            >
-              <Cards title="Chello" />
-              <Cards title="hi" />
-            </Stack>
+            </Box>
           </Stack>
         </Box>
-      </Stack>
-    </Box>
+      ) : (
+        <Box>loading</Box>
+      )}
+    </>
   );
-}
+};
+
+export default withAuth(Dashboard);

@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import React, { useState, useEffect } from "react";
 import { Box, Typography, Stack, Button } from "@mui/material";
 import Image from "next/image";
@@ -6,8 +6,9 @@ import Link from "next/link";
 import GoogleIcon from "@mui/icons-material/Google";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { auth } from "@/app/firebase/config";
+// import { auth } from "@/app/firebase/config";
 import { useRouter } from "next/navigation";
+import { auth } from "../../firebase";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -17,7 +18,6 @@ export default function Register() {
   const [createUserWithEmailAndPassword, user, loading, signUpError] =
     useCreateUserWithEmailAndPassword(auth);
   const router = useRouter();
-
 
   useEffect(() => {
     if (signUpError) {
@@ -35,26 +35,25 @@ export default function Register() {
   }, [signUpError]);
 
   const handleSignUp = async (event) => {
-      event.preventDefault();
-  
-      if (password !== confirmPassword) {
-        setError("Passwords do not match");
-        return;
-      }
-  
-      try {
-        const res = await createUserWithEmailAndPassword(email, password);
-        if (res) {
-          setEmail("");
-          setPassword("");
-          setConfirmPassword("");
-          router.push("/login");
-        }
-      } catch (err) {
-        console.error(err);
-      }
-    };
+    event.preventDefault();
 
+    if (password !== confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    try {
+      const res = await createUserWithEmailAndPassword(email, password);
+      if (res) {
+        setEmail("");
+        setPassword("");
+        setConfirmPassword("");
+        router.push("/login");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   return (
     <>
