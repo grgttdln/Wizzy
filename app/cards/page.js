@@ -14,9 +14,15 @@ import AccountHolder from "../components/account_holder";
 import { useRouter } from "next/navigation";
 import withAuth from "../../utils/withAuth";
 import { useAuth } from "../../AuthContext";
+import { useState, useEffect } from "react";
+import { updateCards } from "../api/save/route.mjs";
 
 const Cards = () => {
   const { user } = useAuth();
+  const [cards, setCards] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // console.log("User:", user.uid);
 
   const router = useRouter();
 
@@ -24,6 +30,23 @@ const Cards = () => {
     router.push("/create_cards");
     console.log("Create New Flashcards button clicked!");
   };
+
+  useEffect(() => {
+    const fetchCards = async () => {
+      try {
+        const userID = user.uid;
+        const cardList = await updateCards(userID);
+        setCards(cardList);
+        console.log("Card List:", JSON.stringify(cardList, null, 2));
+      } catch (error) {
+        console.error("Error fetching cards:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCards();
+  }, []);
 
   return (
     <>
@@ -159,8 +182,17 @@ const Cards = () => {
                 </ButtonBase>
 
                 {/* Cards */}
-                <CardsWide title="sample" />
-                <CardsWide title="sample" />
+                {loading ? (
+                  <p>Loading...</p>
+                ) : (
+                  cards.map((card) => (
+                    <CardsWide
+                      title={`${
+                        card.name.charAt(0).toUpperCase() + card.name.slice(1)
+                      }`}
+                    />
+                  ))
+                )}
               </Stack>
             </Box>
           </Stack>

@@ -18,6 +18,7 @@ const Cards = () => {
     console.log("topic", event.target.value);
   };
 
+  // Creating Question
   const generateQuestions = async (sample) => {
     console.log("Topic:", sample);
     setIsLoading(true);
@@ -44,7 +45,8 @@ const Cards = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const text = await response.text(); // Get raw response text
+      // Resutls
+      const text = await response.text();
       console.log("Raw response text:", text);
 
       try {
@@ -59,6 +61,9 @@ const Cards = () => {
       setIsLoading(false);
     }
   };
+
+  // Saving Question in Firebase
+  const saveQuestions = async () => {};
 
   return (
     <Box
