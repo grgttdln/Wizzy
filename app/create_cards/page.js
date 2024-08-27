@@ -5,6 +5,7 @@ import Sidebar from "../components/sidebar";
 import AccountHolder from "../components/account_holder";
 import withAuth from "../../utils/withAuth";
 import { useAuth } from "../../AuthContext";
+import { saveQuestions } from "../api/save/route.mjs";
 
 const Cards = () => {
   const { user } = useAuth();
@@ -19,8 +20,8 @@ const Cards = () => {
   };
 
   // Creating Question
-  const generateQuestions = async (sample) => {
-    console.log("Topic:", sample);
+  const generateQuestions = async (subject) => {
+    console.log("Topic:", subject);
     setIsLoading(true);
 
     try {
@@ -34,10 +35,10 @@ const Cards = () => {
           messages: [
             {
               role: "user",
-              content: `Generate a list of 10 question and answer pairs in JSON format, focusing on basic concepts in ${sample}. The list should be a JSON object with a key 'questions' containing a list of dictionaries, where each dictionary has a 'question' and an 'answer' key. Ensure the questions and answers are accurate and avoid any ambiguity.`,
+              content: `Generate a list of 10 question and answer pairs in JSON format, focusing on basic concepts in ${subject}. The list should be a JSON object with a key 'questions' containing a list of dictionaries, where each dictionary has a 'question' and an 'answer' key. Ensure the questions and answers are accurate and avoid any ambiguity.`,
             },
           ],
-          systemPrompt: `Please assist the user with generating accurate and relevant ${sample}-related questions.`,
+          systemPrompt: `Please assist the user with generating accurate and relevant ${subject}-related questions.`,
         }),
       });
 
@@ -45,13 +46,19 @@ const Cards = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      // Resutls
+      // Results
       const text = await response.text();
-      console.log("Raw response text:", text);
+      console.log(text);
 
       try {
         const parsedResult = JSON.parse(text);
         setSetOfQuestions(parsedResult);
+
+        // TODO: modify generated questions
+
+        // Save questions in Firebase
+        saveQuestions(user.uid, topic, text);
+        console.log("Questions saved in Firebase:", text);
       } catch (parseError) {
         console.error("Error parsing JSON:", parseError);
       }
@@ -61,9 +68,6 @@ const Cards = () => {
       setIsLoading(false);
     }
   };
-
-  // Saving Question in Firebase
-  const saveQuestions = async () => {};
 
   return (
     <Box
