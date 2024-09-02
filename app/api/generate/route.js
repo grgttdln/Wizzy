@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 
 // Next.js automatically loads environment variables from .env files
 const groq = new Groq({
-  apiKey: "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",
+  apiKey: "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",
 });
 
 export async function POST(req) {

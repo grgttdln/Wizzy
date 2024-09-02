@@ -20,7 +20,7 @@ export default function AccountHolder({ ...props }) {
           color={"#003875"}
           marginY={"2%"}
         >
-          Smaple
+          {props.username}
         </Typography>
       </Stack>
     </Box>

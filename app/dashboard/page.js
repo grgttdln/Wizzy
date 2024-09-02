@@ -2,24 +2,36 @@
 
 import { useState, useEffect, useRef } from "react";
 import { Box, Typography, Stack, Button } from "@mui/material";
-import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import Sidebar from "../components/sidebar";
 import Cards from "../components/cards";
 import AccountHolder from "../components/account_holder";
 import CardsStats from "../components/cards_stats";
-import { useAuthState } from "react-firebase-hooks/auth";
-// import { auth } from "@/app/firebase/config";
-import { auth } from "../../firebase";
 import { useRouter } from "next/navigation";
 import withAuth from "../../utils/withAuth";
 import { useAuth } from "../../AuthContext";
+import { updateCards } from "../api/save/route.mjs";
 
 const Dashboard = () => {
   const { user } = useAuth();
+  const [cards, setCards] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // const [user] = useAuthState(auth);
-  const router = useRouter();
+  useEffect(() => {
+    const fetchCards = async () => {
+      try {
+        const userID = user.uid;
+        const cardList = await updateCards(userID);
+        setCards(cardList);
+        console.log("Card List:", JSON.stringify(cardList, null, 2));
+      } catch (error) {
+        console.error("Error fetching cards:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCards();
+  }, []);
 
   return (
     <>
@@ -43,14 +55,13 @@ const Dashboard = () => {
                 height: "100vh",
                 width: "77vw",
                 backgroundColor: "#EEF4FE",
-                justifyContent: "center",
-                display: "flex",
+                paddingLeft: "2%",
               }}
             >
               <Stack>
                 {/* Account Header */}
 
-                <AccountHolder />
+                <AccountHolder username={user.email} />
 
                 {/* Cards Stats */}
 
@@ -60,7 +71,7 @@ const Dashboard = () => {
                 <Stack
                   marginTop={"3%"}
                   direction={"row"}
-                  sx={{ alignItems: "center", display: "flex" }}
+                  sx={{ display: "flex" }}
                 >
                   <Typography
                     className="raleway-700"
@@ -69,54 +80,51 @@ const Dashboard = () => {
                   >
                     Continue Learning
                   </Typography>
-
-                  <Stack
-                    direction={"row"}
-                    spacing={1}
-                    sx={{ marginLeft: "auto" }}
-                  >
-                    <Button
-                      sx={{
-                        backgroundColor: "white",
-                        borderRadius: "50%",
-                        width: "48px",
-                        height: "48px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        padding: "0",
-                        minWidth: "auto",
-                      }}
-                    >
-                      <ArrowBackIosIcon sx={{ color: "#003875" }} />
-                    </Button>
-                    <Button
-                      sx={{
-                        backgroundColor: "white",
-                        borderRadius: "50%",
-                        width: "48px",
-                        height: "48px",
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        padding: "0",
-                        minWidth: "auto",
-                      }}
-                    >
-                      <ArrowForwardIosIcon sx={{ color: "#003875" }} />
-                    </Button>
-                  </Stack>
                 </Stack>
                 {/* Card Display */}
-                <Stack
-                  direction={"row"}
-                  marginTop={"2%"}
-                  spacing={2}
-                  sx={{ alignItems: "center", display: "flex" }}
+                <Box
+                  sx={{
+                    marginTop: "2%",
+                    overflowX: "auto",
+                    width: "100%",
+                    display: "flex",
+                    paddingRight: "5%",
+                    scrollbarWidth: "none",
+                    "&::-webkit-scrollbar": {
+                      display: "none",
+                    },
+                  }}
                 >
-                  <Cards title="Chello" />
-                  <Cards title="hi" />
-                </Stack>
+                  <Stack
+                    direction="row"
+                    spacing={2}
+                    sx={{
+                      display: "inline-flex",
+                      minWidth: "max-content",
+                    }}
+                  >
+                    {/* MAIN CARD */}
+                    {/* <Cards title="Chello" />
+                    <Cards title="Chello" />
+                    <Cards title="Chello" />
+                    <Cards title="Chello" />
+                    <Cards title="Chello" /> */}
+
+                    {/* Cards */}
+                    {loading ? (
+                      <p>Loading...</p>
+                    ) : (
+                      cards.map((card) => (
+                        <Cards
+                          title={`${
+                            card.name.charAt(0).toUpperCase() +
+                            card.name.slice(1)
+                          }`}
+                        />
+                      ))
+                    )}
+                  </Stack>
+                </Box>
               </Stack>
             </Box>
           </Stack>

@@ -22,8 +22,6 @@ const Cards = () => {
   const [cards, setCards] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // console.log("User:", user.uid);
-
   const router = useRouter();
 
   const handleClick = () => {
@@ -78,7 +76,7 @@ const Cards = () => {
               }}
             >
               <Box sx={{ width: "75vw" }}>
-                <AccountHolder />
+                <AccountHolder username={user.email} />
               </Box>
               <Stack
                 direction={"row"}

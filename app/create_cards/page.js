@@ -10,18 +10,15 @@ import { saveQuestions } from "../api/save/route.mjs";
 const Cards = () => {
   const { user } = useAuth();
   const [topic, setTopic] = useState("");
-  const [message, setMessage] = useState("");
   const [setOfQuestions, setSetOfQuestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleInputChange = (event) => {
     setTopic(event.target.value);
-    console.log("topic", event.target.value);
   };
 
   // Creating Question
   const generateQuestions = async (subject) => {
-    console.log("Topic:", subject);
     setIsLoading(true);
 
     try {
@@ -48,17 +45,13 @@ const Cards = () => {
 
       // Results
       const text = await response.text();
-      console.log(text);
 
       try {
         const parsedResult = JSON.parse(text);
         setSetOfQuestions(parsedResult);
 
-        // TODO: modify generated questions
-
         // Save questions in Firebase
         saveQuestions(user.uid, topic, text);
-        console.log("Questions saved in Firebase:", text);
       } catch (parseError) {
         console.error("Error parsing JSON:", parseError);
       }
@@ -97,7 +90,7 @@ const Cards = () => {
           }}
         >
           <Box sx={{ width: "75vw" }}>
-            <AccountHolder />
+            <AccountHolder username={user.email} />
           </Box>
           <Stack marginX={"4%"} marginTop={"2%"}>
             <Typography
