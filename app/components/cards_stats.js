@@ -1,6 +1,43 @@
-import { Box, Typography, Stack, Button } from "@mui/material";
+import { useState, useEffect } from "react";
+import { Box, Typography, Stack } from "@mui/material";
+import { firestore } from "../../firebase"; // Import Firebase configuration
+import { collection, query, where, getDocs } from "firebase/firestore";
 
-export default function CardsStats() {
+export default function CardsStats({ userId }) {
+  const [flashcardsCreated, setFlashcardsCreated] = useState(0);
+  const [studiedCards, setStudiedCards] = useState(0);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Reference to the 'card' subcollection of the specific user
+        const cardsRef = collection(firestore, "cards", userId, "card");
+
+        // Query to get the total number of cards in the 'card' subcollection for the specific user
+        const totalCardsQuery = query(cardsRef);
+        const totalCardsSnapshot = await getDocs(totalCardsQuery);
+        const totalFlashcards = totalCardsSnapshot.size; // Count the number of cards for this user
+
+        // Query to get the number of studied cards (where 'studied' is true)
+        
+        const studiedCardsQuery = query(cardsRef, where("studied", "==", true));
+        const studiedCardsSnapshot = await getDocs(studiedCardsQuery);
+        const totalStudiedCards = studiedCardsSnapshot.size; // Count the studied cards for this user
+
+        // Update state with the counts
+        setFlashcardsCreated(totalFlashcards);
+        setStudiedCards(totalStudiedCards);
+
+      } catch (error) {
+        console.error("Error fetching data: ", error);
+      }
+    };
+
+    if (userId) {
+      fetchData();
+    }
+  }, [userId]);
+
   return (
     <>
       {/* First Box */}
@@ -22,7 +59,7 @@ export default function CardsStats() {
           }}
         >
           <Typography className="raleway-600" fontSize={"20px"}>
-            App Name
+            Wizzy
           </Typography>
           <Typography
             className="raleway-600"
@@ -38,7 +75,6 @@ export default function CardsStats() {
       </Box>
 
       {/* 3 Boxes */}
-
       <Stack direction={"row"} spacing={3} marginTop={"2%"}>
         <Box
           sx={{
@@ -55,7 +91,7 @@ export default function CardsStats() {
               fontSize={"78px"}
               color={"#000000"}
             >
-              0
+              {flashcardsCreated}
             </Typography>
             <Typography
               className="raleway-500"
@@ -81,7 +117,7 @@ export default function CardsStats() {
               fontSize={"78px"}
               color={"#000000"}
             >
-              0
+              {studiedCards}
             </Typography>
             <Typography
               className="raleway-500"
@@ -114,7 +150,7 @@ export default function CardsStats() {
               fontSize={"24px"}
               color={"#000000"}
             >
-              exported cards
+              days study streak
             </Typography>
           </Stack>
         </Box>

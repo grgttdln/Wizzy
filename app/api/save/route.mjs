@@ -40,9 +40,8 @@ export const saveQuestions = async (userID, cardName, question) => {
   const questionData = JSON.stringify(sample["questions"]);
   const cardDocRef = doc(cardsCollectionRef, cardName.toLowerCase());
 
-  await setDoc(cardDocRef, { [cardName.toLowerCase()]: questionData });
-
-  // console.log(
-  //   `Questions saved to the user's card subcollection with field name ${cardName} successfully!`
-  // );
+  await setDoc(cardDocRef, {
+    [cardName.toLowerCase()]: questionData,
+    studied: false, // Add the studied field
+  });
 };

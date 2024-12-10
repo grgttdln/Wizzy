@@ -86,9 +86,9 @@ export default function Login() {
           }}
         >
           <Image
-            src="/card.png"
-            width={200}
-            height={200}
+            src="/wizzylogo.png"
+            width={600}
+            height={600}
             quality={100}
             alt="Logo"
           />
@@ -108,7 +108,7 @@ export default function Login() {
               Login
             </Typography>
             <Typography variant="h5" color={"#003875"} className="raleway-200">
-              Login to access app name
+              Login to access Wizzy
             </Typography>
             <Box>
               <Stack direction={"row"} spacing={2} marginTop={"15px"}>
@@ -140,20 +140,6 @@ export default function Login() {
                       Sign in with Google
                     </Typography>
                   </Stack>
-                </Button>
-                <Button
-                  className="raleway-400"
-                  sx={{
-                    backgroundColor: "#DDEEF8",
-                    color: "#003875",
-                    borderRadius: "10px",
-                    padding: "18px 40px",
-                    display: "flex",
-                    justifyContent: "center",
-                    alignItems: "center",
-                  }}
-                >
-                  <GitHubIcon sx={{ fontSize: "30px" }} />{" "}
                 </Button>
               </Stack>
 

@@ -1,45 +1,56 @@
 import Groq from "groq-sdk";
 import { NextResponse } from "next/server";
 
-// Next.js automatically loads environment variables from .env files
+// Initialize the Groq SDK with your API key
 const groq = new Groq({
-  apiKey: "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",
+  apiKey: process.env.GROQ_API_KEY,
 });
 
 export async function POST(req) {
-  const data = await req.json();
-  const { messages, systemPrompt } = data;
-
-  let response;
-  console.log(...messages, systemPrompt);
   try {
-    response = await groq.chat.completions.create({
+    // Parse the request body
+    const data = await req.json();
+    const { messages, systemPrompt } = data;
+
+    if (!systemPrompt || typeof systemPrompt !== "string") {
+      return NextResponse.json(
+        { error: "Invalid or missing systemPrompt" },
+        { status: 400 }
+      );
+    }
+
+    const prompt = `Generate a list of 10 question and answer pairs in JSON format, focusing on basic concepts in ${systemPrompt}. Provide a JSON object with a key 'questions' containing a list of dictionaries. Each dictionary should have a 'question' and an 'answer' key. Avoid additional text.`;
+
+    console.log("Prompt:", prompt);
+
+    const response = await groq.chat.completions.create({
       messages: [
         {
           role: "system",
-          content:
-            "Generate a list of 10 question and answer pairs in JSON format, focusing on basic concepts in plants. Provide a JSON object with a key 'questions' containing a list of dictionaries. Each dictionary should have a 'question' and an 'answer' key. Avoid additional text.",
+          content: prompt,
         },
         ...messages,
       ],
       model: "llama3-8b-8192",
     });
+
+    const content = response.choices[0]?.message?.content;
+
+    if (!content) {
+      return NextResponse.json({ error: "No content returned" }, { status: 500 });
+    }
+
+    // console.log("Raw Content:", content);
+
+    try {
+      const cleanContent = JSON.parse(content); // Attempt to parse JSON
+      return NextResponse.json(cleanContent);
+    } catch (parseError) {
+      console.error("JSON Parse Error:", parseError.message);
+      return NextResponse.json({ error: "Invalid JSON format returned" }, { status: 500 });
+    }
   } catch (error) {
+    console.error("Error:", error.message);
     return NextResponse.json({ error: error.message }, { status: 500 });
-  }
-
-  const content = response.choices[0]?.message?.content;
-  if (!content) {
-    return NextResponse.json({ error: "No content returned" }, { status: 500 });
-  }
-
-  try {
-    const cleanContent = JSON.parse(content);
-    return NextResponse.json(cleanContent);
-  } catch (error) {
-    return NextResponse.json(
-      { error: "Failed to parse content" },
-      { status: 500 }
-    );
   }
 }

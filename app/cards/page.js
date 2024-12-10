@@ -20,6 +20,8 @@ import { updateCards } from "../api/save/route.mjs";
 const Cards = () => {
   const { user } = useAuth();
   const [cards, setCards] = useState([]);
+  const [filteredCards, setFilteredCards] = useState([]); // State for filtered cards
+  const [searchQuery, setSearchQuery] = useState(""); // State for search input
   const [loading, setLoading] = useState(true);
 
   const router = useRouter();
@@ -35,6 +37,7 @@ const Cards = () => {
         const userID = user.uid;
         const cardList = await updateCards(userID);
         setCards(cardList);
+        setFilteredCards(cardList.filter((card) => card.studied === false)); // Initialize filtered cards
         console.log("Card List:", JSON.stringify(cardList, null, 2));
       } catch (error) {
         console.error("Error fetching cards:", error);
@@ -45,6 +48,16 @@ const Cards = () => {
 
     fetchCards();
   }, []);
+
+  // Filter cards whenever the search query changes
+  useEffect(() => {
+    const lowerCaseQuery = searchQuery.toLowerCase();
+    const filtered = cards.filter(
+      (card) =>
+        card.name.toLowerCase().includes(lowerCaseQuery) && card.studied === false
+    );
+    setFilteredCards(filtered);
+  }, [searchQuery, cards]);
 
   return (
     <>
@@ -64,8 +77,9 @@ const Cards = () => {
             {/* Main content */}
             <Box
               sx={{
-                height: "100vh",
-                width: "77vw",
+                height: "104vh",
+                width: "75vw",
+                paddingBottom: "1rem",
                 backgroundColor: "#EEF4FE",
                 overflow: "auto",
                 "::-webkit-scrollbar": {
@@ -90,13 +104,15 @@ const Cards = () => {
                   fontSize={48}
                   color={"#003875"}
                 >
-                  Continue Learning
+                  Your Flashcards
                 </Typography>
                 <Stack direction={"column"} alignItems={"flex-end"}>
                   <TextField
                     id="standard-basic"
                     label="type or search a card"
                     variant="standard"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)} // Update search query
                     sx={{
                       width: "200%",
                       "& .MuiInputBase-root": {
@@ -148,7 +164,7 @@ const Cards = () => {
                   <Stack
                     direction={"row"}
                     sx={{
-                      backgroundColor: "white",
+                      backgroundColor: "#003875",
                       borderRadius: "25px",
                       padding: "20px",
                       width: "70vw",
@@ -162,17 +178,17 @@ const Cards = () => {
                     <Typography
                       className="raleway-700"
                       fontSize={"24px"}
-                      color={"#003875"}
+                      color={"#FFFFFF"}
                       marginRight={"1%"}
                     >
-                      Create New Flashcards
+                      Create A New Flashcard Set
                     </Typography>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       height="32px"
                       viewBox="0 -960 960 960"
                       width="32px"
-                      fill="#003875"
+                      fill="#FFFFFF"
                     >
                       <path d="M447.07-278.41h69.86v-164h164.66v-69.85H516.93v-169.33h-69.86v169.33H278.41v69.85h168.66v164ZM480.2-73.3q-84.44 0-158.48-31.96-74.03-31.96-129.27-87.19-55.23-55.24-87.19-129.3Q73.3-395.82 73.3-480.31q0-84.5 31.96-158.58 31.96-74.09 87.17-129t129.28-86.94q74.08-32.03 158.59-32.03t158.61 32.02q74.11 32.02 129 86.91 54.9 54.88 86.92 129.08 32.03 74.2 32.03 158.67 0 84.46-32.03 158.5-32.03 74.03-86.94 129.12t-129.08 87.17Q564.64-73.3 480.2-73.3Zm.13-75.76q138.05 0 234.33-96.51 96.28-96.52 96.28-234.76 0-138.05-96.16-234.33-96.15-96.28-234.86-96.28-137.79 0-234.33 96.16-96.53 96.15-96.53 234.86 0 137.79 96.51 234.33 96.52 96.53 234.76 96.53ZM480-480Z" />
                     </svg>
@@ -183,8 +199,9 @@ const Cards = () => {
                 {loading ? (
                   <p>Loading...</p>
                 ) : (
-                  cards.map((card) => (
+                  filteredCards.map((card) => (
                     <CardsWide
+                      key={card.name}
                       title={`${
                         card.name.charAt(0).toUpperCase() + card.name.slice(1)
                       }`}
@@ -196,7 +213,7 @@ const Cards = () => {
           </Stack>
         </Box>
       ) : (
-        <Box>Loding</Box>
+        <Box>Loading</Box>
       )}
     </>
   );

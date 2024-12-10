@@ -6,9 +6,11 @@ import AccountHolder from "../components/account_holder";
 import withAuth from "../../utils/withAuth";
 import { useAuth } from "../../AuthContext";
 import { saveQuestions } from "../api/save/route.mjs";
+import { useRouter } from "next/navigation"; 
 
 const Cards = () => {
   const { user } = useAuth();
+  const router = useRouter();
   const [topic, setTopic] = useState("");
   const [setOfQuestions, setSetOfQuestions] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -52,6 +54,9 @@ const Cards = () => {
 
         // Save questions in Firebase
         saveQuestions(user.uid, topic, text);
+        // Redirect to the newly created flashcards
+        const encodedTopic = encodeURIComponent(topic.toLowerCase());
+        router.push(`/details/${encodedTopic}`);
       } catch (parseError) {
         console.error("Error parsing JSON:", parseError);
       }
@@ -99,7 +104,7 @@ const Cards = () => {
               color={"#003875"}
               marginBottom={"20px"}
             >
-              Create a Flashcard
+              Create a Flashcard Set
             </Typography>
             <TextField
               id="standard-basic"

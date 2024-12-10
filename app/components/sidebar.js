@@ -10,8 +10,10 @@ import {
 import SpaceDashboardIcon from "@mui/icons-material/SpaceDashboard";
 import ExtensionIcon from "@mui/icons-material/Extension";
 import LogoutIcon from "@mui/icons-material/Logout";
+import StyleIcon from '@mui/icons-material/Style';
 import { signOut } from "firebase/auth";
 // import { auth } from "@/app/firebase/config";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { auth } from "../../firebase";
 import { useAuth } from "../../AuthContext";
@@ -42,8 +44,8 @@ const Sidebar = () => {
     <>
       <Box
         sx={{
-          height: "100vh",
-          width: "23vw",
+          height: "104vh",
+          width: "22vw",
           backgroundColor: "white",
           borderTopRightRadius: "45px",
           borderBottomRightRadius: "45px",
@@ -61,6 +63,17 @@ const Sidebar = () => {
             flex: 1,
           }}
         >
+          <Stack direction={"row"} paddingLeft={6} paddingTop={3} >
+          <Image
+              src="/wizzylogo.png"
+              width={80}
+              height={80}
+              quality={100}
+              alt="Logo"
+            />
+          <Typography className="raleway-800" color={"#003875"} sx={{ padding: "20px 12px 50px 14px", fontSize: "32px"  }} >Wizzy</Typography>
+          </Stack>
+
           <Typography
             className="raleway-600"
             color={"#939393"}
@@ -90,7 +103,7 @@ const Sidebar = () => {
               }}
             >
               <SpaceDashboardIcon sx={{ fontSize: "30px" }} />
-              <Typography className="raleway-600" fontSize={"16px"}>
+              <Typography className="raleway-600" fontSize={"20px"}>
                 Dashboard
               </Typography>
             </Stack>
@@ -117,7 +130,7 @@ const Sidebar = () => {
               }}
             >
               <ExtensionIcon sx={{ fontSize: "30px" }} />
-              <Typography className="raleway-600" fontSize={"16px"}>
+              <Typography className="raleway-600" fontSize={"20px"}>
                 Cards
               </Typography>
             </Stack>
