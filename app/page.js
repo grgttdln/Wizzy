@@ -70,7 +70,7 @@ export default function Home() {
           Generate flashcards and practice quizzes in seconds
         </Typography>
         <Button href="/login" variant="contained" className='raleway-400' sx={{ mt: 6, fontSize: 16, px: 40, py: 2, mb: 8, background: "#003875", borderRadius: 4, }}>
-          Let's get Wizzy! ⚡️
+          Let&apos;s get Wizzy! ⚡️
         </Button>
         </Box>
       </Box>

@@ -269,7 +269,7 @@ export default function Login() {
                   direction={"row"}
                 >
                   <Typography marginRight={"8px"} className="raleway-300">
-                    Don't have an account?
+                    Don&apos;t have an account?
                   </Typography>
                   <i className="raleway-300">
                     <Link href="/register">Register Here</Link>

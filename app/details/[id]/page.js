@@ -108,7 +108,7 @@ const Details = () => {
     if (user?.uid) {
       fetchCards();
     }
-  }, [user.uid]);
+  }, [user.uid, params.uid]);
   
 
   return (

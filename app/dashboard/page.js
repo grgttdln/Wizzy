@@ -33,7 +33,7 @@ const Dashboard = () => {
     };
 
     fetchCards();
-  }, []);
+  }, [user.uid]);
 
   return (
     <>

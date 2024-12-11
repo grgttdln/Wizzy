@@ -47,7 +47,7 @@ const Cards = () => {
     };
 
     fetchCards();
-  }, []);
+  }, [user.uid]);
 
   // Filter cards whenever the search query changes
   useEffect(() => {
