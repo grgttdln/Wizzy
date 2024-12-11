@@ -6,9 +6,9 @@ import Link from "next/link";
 import GoogleIcon from "@mui/icons-material/Google";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
-// import { auth } from "@/app/firebase/config";
 import { useRouter } from "next/navigation";
-import { auth } from "../../firebase";
+import { auth, provider } from "../../firebase";
+import { signInWithPopup } from "firebase/auth";
 
 export default function Register() {
   const [email, setEmail] = useState("");
@@ -18,6 +18,22 @@ export default function Register() {
   const [createUserWithEmailAndPassword, user, loading, signUpError] =
     useCreateUserWithEmailAndPassword(auth);
   const router = useRouter();
+
+  const [value, setValue] = useState("");
+
+  const SignInWithGoogleHandler = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const email = result.user.email;
+        setValue(email);
+        localStorage.setItem("email", email);
+
+        router.push("/dashboard");
+      })
+      .catch((error) => {
+        console.error("Error during sign-in:", error);
+      });
+  };
 
   useEffect(() => {
     if (signUpError) {
@@ -126,6 +142,7 @@ export default function Register() {
               <Box>
                 <Stack direction={"row"} spacing={2} marginTop={"15px"}>
                   <Button
+                    onClick={SignInWithGoogleHandler}
                     className="raleway-400"
                     sx={{
                       backgroundColor: "#DDEEF8",
@@ -153,7 +170,6 @@ export default function Register() {
                       </Typography>
                     </Stack>
                   </Button>
-                  
                 </Stack>
 
                 <Stack marginTop={"35px"}>

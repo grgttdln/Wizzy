@@ -7,18 +7,18 @@ import Link from "next/link";
 import GoogleIcon from "@mui/icons-material/Google";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
-import { auth } from "../../firebase";
+import { auth, provider } from "../../firebase";
+import { signInWithPopup } from "firebase/auth";
 import { useRouter } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
 
 export default function Login() {
-  const { data: session, status } = useSession();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [signInWithEmailAndPassword, user, loading, signInError] =
     useSignInWithEmailAndPassword(auth);
   const router = useRouter();
+  const [value, setValue] = useState("");
 
   useEffect(() => {
     if (signInError) {
@@ -43,12 +43,18 @@ export default function Login() {
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    try {
-      await signIn("google");
-    } catch (err) {
-      console.error("Google sign-in error:", err);
-    }
+  const handleGoogleSignIn = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const email = result.user.email;
+        setValue(email);
+        localStorage.setItem("email", email);
+
+        router.push("/dashboard");
+      })
+      .catch((error) => {
+        console.error("Error during sign-in:", error);
+      });
   };
 
   return (
