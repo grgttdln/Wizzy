@@ -15,6 +15,9 @@ const raleway_init = Raleway({
 export const metadata = {
   title: "Wizzy | Learn in a Flash!",
   description: "AI Flashcards App",
+  icons: {
+    icon: '/favicon.ico',
+  },
 };
 
 export default function RootLayout({ children }) {
