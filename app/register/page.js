@@ -7,7 +7,7 @@ import GoogleIcon from "@mui/icons-material/Google";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 import { useRouter } from "next/navigation";
-import { auth, provider } from "../../firebase";
+import { auth, googleProvider, githubProvider } from "../../firebase";
 import { signInWithPopup } from "firebase/auth";
 
 export default function Register() {
@@ -22,7 +22,21 @@ export default function Register() {
   const [value, setValue] = useState("");
 
   const SignInWithGoogleHandler = () => {
-    signInWithPopup(auth, provider)
+    signInWithPopup(auth, googleProvider)
+      .then((result) => {
+        const email = result.user.email;
+        setValue(email);
+        localStorage.setItem("email", email);
+
+        router.push("/dashboard");
+      })
+      .catch((error) => {
+        console.error("Error during sign-in:", error);
+      });
+  };
+
+  const SignInWithGithubHandler = () => {
+    signInWithPopup(auth, githubProvider)
       .then((result) => {
         const email = result.user.email;
         setValue(email);
@@ -141,35 +155,79 @@ export default function Register() {
               </Typography>
               <Box>
                 <Stack direction={"row"} spacing={2} marginTop={"15px"}>
-                  <Button
-                    onClick={SignInWithGoogleHandler}
-                    className="raleway-400"
-                    sx={{
-                      backgroundColor: "#DDEEF8",
-                      color: "#003875",
-                      borderRadius: "10px",
-                      padding: "18px 40px",
-                      gap: "5px",
+                  <Box
+                    style={{
+                      flex: 1,
                       display: "flex",
-                      justifyContent: "center",
-                      alignItems: "center",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
                     }}
                   >
-                    <Stack
-                      direction="row"
-                      spacing={2}
-                      sx={{
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <GoogleIcon sx={{ fontSize: "30px" }} />
-                      <Typography className="raleway-300" fontSize={"14px"}>
-                        Sign in with Google
-                      </Typography>
+                    {/* Google */}
+                    <Stack direction={"row"} spacing={2} marginTop={"15px"}>
+                      <Button
+                        onClick={SignInWithGoogleHandler}
+                        className="raleway-400"
+                        sx={{
+                          backgroundColor: "#DDEEF8",
+                          color: "#003875",
+                          borderRadius: "10px",
+                          padding: "18px 80px",
+                          gap: "5px",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Stack
+                          direction="row"
+                          spacing={2}
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <GoogleIcon sx={{ fontSize: "30px" }} />
+                          <Typography className="raleway-300" fontSize={"14px"}>
+                            Sign in with Google
+                          </Typography>
+                        </Stack>
+                      </Button>
                     </Stack>
-                  </Button>
+                    {/* Github */}
+                    <Stack direction={"row"} spacing={2} marginTop={"15px"}>
+                      <Button
+                        onClick={SignInWithGithubHandler}
+                        className="raleway-400"
+                        sx={{
+                          backgroundColor: "#DDEEF8",
+                          color: "#003875",
+                          borderRadius: "10px",
+                          padding: "18px 40px",
+                          gap: "5px",
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                      >
+                        <Stack
+                          direction="row"
+                          spacing={2}
+                          sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <GitHubIcon sx={{ fontSize: "30px" }} />{" "}
+                          <Typography className="raleway-300" fontSize={"14px"}>
+                            Sign in with Github
+                          </Typography>
+                        </Stack>
+                      </Button>
+                    </Stack>
+                  </Box>
                 </Stack>
 
                 <Stack marginTop={"35px"}>

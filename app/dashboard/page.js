@@ -78,7 +78,7 @@ const Dashboard = () => {
                     fontSize={"24px"}
                     color={"#003875"}
                   >
-                    Continue Learning
+                    {loading ? "No Cards Available" : "Continue Learning"}
                   </Typography>
                 </Stack>
 
@@ -119,7 +119,8 @@ const Dashboard = () => {
                         <Cards
                           key={card.name} // Ensure each card has a unique key
                           title={`${
-                            card.name.charAt(0).toUpperCase() + card.name.slice(1)
+                            card.name.charAt(0).toUpperCase() +
+                            card.name.slice(1)
                           }`}
                         />
                       ))
