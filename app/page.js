@@ -84,7 +84,7 @@ export default function Home() {
         mt: 20,
       }}
       >
-      <Typography variant="h4" className='raleway-700' sx={{ mb: 4 }}> You don't have to study 1000 slides overnight anymore. </Typography>
+      <Typography variant="h4" className='raleway-700' sx={{ mb: 4 }}> You don&apos;t have to study 1000 slides overnight anymore. </Typography>
       <Typography variant="h5" className='raleway-400' sx={{ mb: 6 }}> Watch how Wizzy turns study materials into customized flashcards and quizzes in seconds! </Typography>
       
       <Image
